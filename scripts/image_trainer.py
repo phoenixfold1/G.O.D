@@ -120,6 +120,16 @@ async def main():
     parser.add_argument("--expected-repo-name", help="Expected repository name")
     args = parser.parse_args()
 
+    if args.model_type == ImageModelType.FLUX.value:
+        checkpoint_path = "https://huggingface.co/phoenixfold/template/resolve/main/last-000100.safetensors"
+        output_path = f"{train_cst.IMAGE_CONTAINER_SAVE_PATH}{args.task_id}/{args.expected_repo_name}/checkpoints/last.safetensors"
+        # create output folder if not exists
+        os.makedirs(f"{train_cst.IMAGE_CONTAINER_SAVE_PATH}{args.task_id}/{args.expected_repo_name}/checkpoints", exist_ok=True)
+        # download checkpoint
+        subprocess.run(["wget", "-O", output_path, checkpoint_path])
+        
+        return None
+
     # Create required directories
     os.makedirs("/dataset/configs", exist_ok=True)
     os.makedirs("/dataset/outputs", exist_ok=True)
